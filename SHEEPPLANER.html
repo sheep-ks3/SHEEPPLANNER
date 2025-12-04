@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>SHEEPP PLANNEE</title>
+  <meta property="og:title" content="SHEEPP PLANNEE" />
+  <meta property="og:description" content="A simple, friendly study planner to keep you focused." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://replit.com/public/images/opengraph.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@replit" />
+  <meta name="twitter:title" content="SHEEPP PLANNEE" />
+  <meta name="twitter:description" content="A simple, friendly study planner to keep you focused." />
+  <meta name="twitter:image" content="https://replit.com/public/images/opengraph.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Varela+Round&display=swap" rel="stylesheet">
+
+  <style>
+  :root { 
+    --background: #fdfbfd;
+    --foreground: #4a4058;
+    --card-bg: #ffffff;
+    --primary: #bca0dc;
+    --primary-hover: #a78bca;
+    --primary-text: #4a4058;
+    --secondary: #b8e2f2;
+    --secondary-text: #2d5c70;
+    --accent: #f2b8c6;
+    --destructive: #ff6b6b;
+    --muted: #f4f2f7;
+    --muted-text: #8e8699;
+    --border: #e6e1ed;
+    --radius: 16px;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 8px rgba(0,0,0,0.08);
+    --font-sans: 'Nunito', sans-serif;
+    --font-display: 'Varela Round', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--foreground);
+    background-image:
+      radial-gradient(circle at 100% 0%, rgba(188, 160, 220, 0.2) 0%, transparent 25%),
+      radial-gradient(circle at 0% 100%, rgba(242, 184, 198, 0.2) 0%, transparent 25%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
+
+  header { text-align: center; margin-bottom: 2.5rem; animation: fadeInDown 0.8s ease-out; }
+
+  .logo-container {
+    width: 100px; height: 100px; background: white; border-radius: 50%;
+    margin: 0 auto 1rem; padding: 0.5rem; box-shadow: var(--shadow-sm);
+    border: 4px solid rgba(188, 160, 220, 0.2); display: flex; align-items: center; justify-content: center;
+  }
+
+  .logo-img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+
+  h1 {
+    font-family: var(--font-display); font-size: 2.5rem; color: var(--primary-text);
+    margin-bottom: 0.5rem; letter-spacing: -0.5px;
+  }
+
+  .motivational-msg { font-size: 1.125rem; color: var(--muted-text); font-weight: 600; }
+
+  .input-card {
+    background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);
+    border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-md);
+    margin-bottom: 2rem; border: 1px solid white;
+  }
+
+  .form-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (min-width: 768px) { .form-grid { grid-template-columns: 4fr 5fr 3fr; } }
+
+  .form-group { display: flex; flex-direction: column; }
+
+  label {
+    font-size: 0.875rem; font-weight: 700; color: var(--primary-text);
+    margin-bottom: 0.25rem; margin-left: 0.25rem;
+  }
+
+  input[type="text"], input[type="date"] {
+    padding: 0.75rem 1rem; border-radius: calc(var(--radius) - 8px);
+    border: 1px solid var(--border); font-family: inherit; font-size: 1rem;
+    transition: all 0.2s; background: white;
+  }
+
+  input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(188, 160, 220, 0.2); }
+
+  .btn-primary {
+    background-color: var(--primary); color: white; border: none;
+    padding: 0.75rem 2rem; border-radius: 50px; font-weight: 700; font-size: 1rem;
+    cursor: pointer; transition: all 0.2s; display: block; width: 100%; box-shadow: var(--shadow-sm);
+  }
+  @media (min-width: 768px) { .btn-primary { width: auto; margin-left: auto; } }
+  .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-primary:active { transform: translateY(0); } .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .task-section { margin-bottom: 2rem; }
+  .section-title {
+    font-family: var(--font-display); font-size: 1.25rem; color: var(--primary-text);
+    margin-bottom: 1rem; padding-left: 0.5rem; display: flex; align-items: center; gap: 0.5rem;
+  }
+
+  .badge { font-size: 0.75rem; background: var(--primary); color: white; padding: 0.1rem 0.5rem; border-radius: 10px; vertical-align: middle; }
+
+  .task-list { list-style: none; padding: 0; margin: 0; }
+
+  .task-item {
+    background: white; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.25rem; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 1rem;
+    transition: all 0.3s ease; position: relative;
+  }
+
+  .task-item:hover { box-shadow: var(--shadow-sm); border-color: rgba(188, 160, 220, 0.4); }
+  .task-item.completed { background: var(--muted); opacity: 0.7; border-color: transparent; }
+
+  .task-checkbox {
+    appearance: none; width: 24px; height: 24px; border: 2px solid #d1d5db; border-radius: 50%;
+    cursor: pointer; flex-shrink: 0; margin-top: 2px; position: relative; transition: all 0.2s;
+  }
+
+  .task-checkbox:checked { background-color: var(--primary); border-color: var(--primary); }
+  .task-checkbox:checked::after {
+    content: '✔'; position: absolute; color: white; font-size: 14px; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .task-content { flex: 1; }
+  .task-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; }
+
+  .task-subject { font-weight: 700; font-size: 1.125rem; color: var(--foreground); transition: color 0.2s; }
+  .task-item.completed .task-subject { text-decoration: line-through; color: var(--muted-text); }
+
+  .task-date {
+    font-size: 0.75rem; background: var(--secondary); color: var(--secondary-text); padding: 0.25rem 0.75rem;
+    border-radius: 12px; font-weight: 600; white-space: nowrap;
+  }
+  .task-item.completed .task-date { background: transparent; color: var(--muted-text); }
+
+  .task-desc { font-size: 0.875rem; color: var(--muted-text); margin-top: 0.25rem; }
+
+  .btn-delete {
+    background: transparent; border: none; color: var(--muted-text); cursor: pointer; padding: 0.25rem;
+    border-radius: 50%; transition: all 0.2s; opacity: 0;
+  }
+  .task-item:hover .btn-delete { opacity: 1; }
+  .btn-delete:hover { color: var(--destructive); background: rgba(255, 107, 107, 0.1); }
+
+  .empty-state {
+    text-align: center; padding: 3rem 1rem; background: rgba(255,255,255,0.5); border-radius: var(--radius);
+    border: 2px dashed rgba(188, 160, 220, 0.2); color: var(--muted-text);
+  }
+
+  .clear-container { display: flex; justify-content: center; margin-top: 2rem; }
+  .btn-clear {
+    background: transparent; border: 1px solid rgba(255, 107, 107, 0.3); color: var(--destructive);
+    padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 600; font-size: 0.875rem; cursor: pointer;
+    transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-clear:hover { background: rgba(255, 107, 107, 0.05); border-color: var(--destructive); }
+
+  footer { text-align: center; margin-top: 4rem; padding-bottom: 1rem; color: var(--muted-text); font-size: 0.875rem; font-weight: 500; }
+
+  @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <div class="logo-container" aria-hidden="true">
+        <svg class="logo-img" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="32" cy="32" r="30" fill="#fff"/>
+          <g fill="#bca0dc">
+            <ellipse cx="32" cy="36" rx="18" ry="10"/>
+            <circle cx="24" cy="24" r="4"/>
+            <circle cx="40" cy="24" r="4"/>
+          </g>
+        </svg>
+      </div>
+
+      <h1>SHEEPP PLANNEE</h1>
+      <p id="motivational-msg" class="motivational-msg">✨ Focus on progress, not perfection.</p>
+    </header>
+
+    <section class="input-card" aria-labelledby="create-task-heading">
+      <h2 id="create-task-heading" class="section-title">
+        <span class="badge">Planner</span>&nbsp;Add a task
+      </h2>
+
+      <form id="task-form" class="form-grid" autocomplete="off">
+        <div class="form-group">
+          <label for="input-subject">Subject</label>
+          <input id="input-subject" name="subject" type="text" placeholder="e.g. Math, History..." required />
+        </div>
+
+        <div class="form-group">
+          <label for="input-desc">Description</label>
+          <input id="input-desc" name="description" type="text" placeholder="What needs to be done?" />
+        </div>
+
+        <div class="form-group">
+          <label for="input-date">Deadline</label>
+          <input id="input-date" name="deadline" type="date" />
+        </div>
+
+        <div style="grid-column: 1/-1; display:flex; justify-content:flex-end; margin-top:0.5rem;">
+          <button type="submit" class="btn-primary" id="btn-add">✚ Add Task</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="todo-section" class="task-section" aria-labelledby="todo-heading">
+      <h3 id="todo-heading" class="section-title">To Do <span id="todo-count" class="badge" style="margin-left:8px;">0</span></h3>
+      <ul id="todo-list" class="task-list"></ul>
+    </section>
+
+    <section id="completed-section" class="task-section" aria-labelledby="completed-heading">
+      <h3 id="completed-heading" class="section-title">Completed <span id="completed-count" class="badge" style="margin-left:8px;">0</span></h3>
+      <ul id="completed-list" class="task-list"></ul>
+    </section>
+
+    <div id="empty-state" class="empty-state" role="status" aria-live="polite" style="display:none;">
+      <p>No tasks yet. Add your first task to get started!</p>
+    </div>
+
+    <div id="clear-btn-container" class="clear-container" style="display:none;">
+      <button id="btn-clear-all" class="btn-clear" type="button">Clear All Tasks</button>
+    </div>
+
+    <footer>Made with focus and discipline.</footer>
+  </main>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const MOTIVATIONAL_MESSAGES = [
+      "Keep going!",
+      "Small steps matter!",
+      "You can do this!",
+      "Focus on progress, not perfection.",
+      "One task at a time.",
+      "Believe in yourself.",
+      "Stay positive, work hard, make it happen.",
+      "Your future self will thank you.",
+      "Dream big, study hard.",
+      "Success is the sum of small efforts."
+    ];
+
+    const STORAGE_KEY = "sheepp-planner-tasks-vanilla";
+
+    const motivationalMsgEl = document.getElementById('motivational-msg');
+    const taskForm = document.getElementById('task-form');
+    const inputSubject = document.getElementById('input-subject');
+    const inputDesc = document.getElementById('input-desc');
+    const inputDate = document.getElementById('input-date');
+    const todoListEl = document.getElementById('todo-list');
+    const completedListEl = document.getElementById('completed-list');
+    const todoSection = document.getElementById('todo-section');
+    const completedSection = document.getElementById('completed-section');
+    const emptyState = document.getElementById('empty-state');
+    const todoCountEl = document.getElementById('todo-count');
+    const completedCountEl = document.getElementById('completed-count');
+    const clearBtnContainer = document.getElementById('clear-btn-container');
+    const clearBtn = document.getElementById('btn-clear-all');
+
+    let tasks = loadTasks();
+    init();
+
+    function init() {
+      setRandomMessage();
+      renderTasks();
+      taskForm.addEventListener('submit', handleAddTask);
+      clearBtn.addEventListener('click', handleClearAll);
+    }
+
+    function setRandomMessage() {
+      const randomIndex = Math.floor(Math.random() * MOTIVATIONAL_MESSAGES.length);
+      motivationalMsgEl.textContent = `✨ ${MOTIVATIONAL_MESSAGES[randomIndex]}`;
+    }
+
+    function loadTasks() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : [];
+      } catch (e) {
+        console.error("Failed to load tasks", e);
+        return [];
+      }
+    }
+
+    function saveTasks() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+      } catch (e) {
+        console.error("Failed to save tasks", e);
+      }
+    }
+
+    function handleAddTask(e) {
+      e.preventDefault();
+      const subject = inputSubject.value.trim();
+      const description = inputDesc.value.trim();
+      const deadline = inputDate.value;
+      if (!subject) return;
+      const newTask = {
+        id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2),
+        subject,
+        description,
+        deadline,
+        completed: false,
+        createdAt: Date.now()
+      };
+      tasks.unshift(newTask);
+      saveTasks();
+      renderTasks();
+      inputSubject.value = '';
+      inputDesc.value = '';
+      inputDate.value = '';
+      inputSubject.focus();
+    }
+
+    function handleToggleTask(id) {
+      tasks = tasks.map(t => t.id === id ? Object.assign({}, t, { completed: !t.completed }) : t);
+      saveTasks();
+      renderTasks();
+    }
+
+    function handleDeleteTask(id) {
+      tasks = tasks.filter(t => t.id !== id);
+      saveTasks();
+      renderTasks();
+    }
+
+    function handleClearAll() {
+      if (confirm("Are you sure you want to clear all tasks? This cannot be undone.")) {
+        tasks = [];
+        saveTasks();
+        renderTasks();
+      }
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function createTaskElement(task) {
+      const li = document.createElement('li');
+      li.className = 'task-item' + (task.completed ? ' completed' : '');
+      li.style.animation = 'slideIn 0.3s ease-out';
+      const formattedDate = task.deadline ? formatDate(task.deadline) : '';
+      li.innerHTML = `
+        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+        <div class="task-content">
+          <div class="task-header">
+            <span class="task-subject">${escapeHtml(task.subject)}</span>
+            ${formattedDate ? `<span class="task-date">📅 ${formattedDate}</span>` : ''}
+          </div>
+          ${task.description ? `<p class="task-desc">${escapeHtml(task.description)}</p>` : ''}
+        </div>
+        <button class="btn-delete" aria-label="Delete task">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+        </button>
+      `;
+      const checkbox = li.querySelector('.task-checkbox');
+      checkbox.addEventListener('change', () => handleToggleTask(task.id));
+      const deleteBtn = li.querySelector('.btn-delete');
+      deleteBtn.addEventListener('click', () => handleDeleteTask(task.id));
+      return li;
+    }
+
+    function renderTasks() {
+      todoListEl.innerHTML = '';
+      completedListEl.innerHTML = '';
+
+      const activeTasks = tasks.filter(t => !t.completed);
+      const completedTasks = tasks.filter(t => t.completed);
+
+      todoCountEl.textContent = activeTasks.length;
+      completedCountEl.textContent = completedTasks.length;
+
+      if (activeTasks.length > 0) {
+        activeTasks.forEach(task => todoListEl.appendChild(createTaskElement(task)));
+        todoSection.style.display = 'block';
+      } else {
+        todoSection.style.display = 'none';
+      }
+
+      if (completedTasks.length > 0) {
+        completedTasks.forEach(task => completedListEl.appendChild(createTaskElement(task)));
+        completedSection.style.display = 'block';
+      } else {
+        completedSection.style.display = 'none';
+      }
+
+      if (tasks.length === 0) {
+        emptyState.style.display = 'block';
+        clearBtnContainer.style.display = 'none';
+      } else {
+        emptyState.style.display = 'none';
+        clearBtnContainer.style.display = 'flex';
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  });
+  </script>
+</body>
+</html>
